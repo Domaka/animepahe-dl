@@ -42,10 +42,10 @@ set_var() {
        _OPENSSL="$(command -v openssl)" || command_not_found "openssl"
     fi
 
-    _HOST="https://animepahe.ru"
+    _HOST="https://animepahe.si"
     _ANIME_URL="$_HOST/anime"
     _API_URL="$_HOST/api"
-    _REFERER_URL="$_HOST"
+    _REFERER_URL="https://kwik.cx"
 
     _SCRIPT_PATH=$(dirname "$(realpath "$0")")
     _ANIME_LIST_FILE="$_SCRIPT_PATH/anime.list"
@@ -328,7 +328,7 @@ decrypt_segments() {
     export _OPENSSL k
     export -f decrypt_file
     xargs -I {} -P "$(get_thread_number "$1")" \
-        bash -c 'decrypt_file "{}" "$k"' < <(ls "${2}/"*.ts.encrypted)
+        bash -c 'decrypt_file "{}" "$k"' < <(ls "${2}/"*.encrypted)
 }
 
 download_episode() {
@@ -365,7 +365,7 @@ download_episode() {
             ! cd "$cpath" && print_warn "Cannot change directory to $cpath" && return
             [[ -z "${_DEBUG_MODE:-}" ]] && rm -rf "$opath" || return 0
         else
-            "$_FFMPEG" -headers "Referer: $_REFERER_URL" -i "$pl" -c copy $erropt -y "$v"
+            "$_FFMPEG" -headers "Referer: $_REFERER_URL" -allowed_extensions ALL -i "$pl" -c copy $erropt -y "$v"
         fi
     else
         echo "$pl"
